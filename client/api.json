@@ -1,0 +1,103 @@
+
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io/](http//swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key special-key to test the authorization filters.",
+      "version": "1.0.5",
+      "title": "Health Documentation Get Nest.js",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+        "email": "apiteam@swagger.io"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "tags": [
+      {
+        "name": "Health",
+        "description": "This is an example about how to use Docs Open Api proving a Health check service "
+      }
+    ],
+    "basePath": "/",
+    "schemes": [
+      "https",
+      "http"
+    ],
+    "paths": {
+      "/_health/": {
+        "get": {
+          "tags": [
+            ""
+          ],
+          "summary": "Get a verification of the health service ",
+          "description": "",
+          "operationId": "getHealth",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "health",
+              "in": "path",
+              "description": "Health check service",
+              "required": true,
+              "type": "integer",
+              "maximum": 1,
+              "minimum": 0,
+              "format": "int64"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "type": "object",
+                "$ref": "#/definitions/HealthGet"
+              }
+            },
+            "400": {
+              "description": "HealthId required"
+            },
+            "404": {
+              "description": "Health service not found"
+            },
+            "500": {
+              "description": "Server Error"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "HealthGet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "example": "Health check service is available"
+          },
+          "category": {
+            "type": "string",
+            "example": "Endpoint"
+            
+          }
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+  
