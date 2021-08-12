@@ -77,17 +77,38 @@
       "HealthGet": {
         "type": "object",
         "properties": {
-          "id": {
+
+          "appName": {
+            "type": "string",
+            "example": "project-heroku"
+          },
+
+          "available": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "uptime": {
             "type": "integer",
-            "format": "int32"
+            "example": 237.3771718
           },
-          "name": {
+          "serverId": {
             "type": "string",
-            "example": "Health check service is available"
+            "example": "LAPTOP-S10RM308 14548"
+            
           },
-          "category": {
+          "hostname": {
             "type": "string",
-            "example": "Endpoint"
+            "example": "LAPTOP-Q155"
+            
+          },
+          "startTime": {
+            "type": "string",
+            "example": "2021-08-12T17:34:17.713Z"
+            
+          },
+          "version": {
+            "type": "string",
+            "example": "0.0.1"
             
           }
         }
