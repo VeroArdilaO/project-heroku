@@ -42,14 +42,14 @@
           ],
           "parameters": [
             {
-              "name": "health",
-              "in": "path",
+              "name": "_health",
+              "in": "",
               "description": "Health check service",
               "required": true,
-              "type": "integer",
-              "maximum": 1,
-              "minimum": 0,
-              "format": "int64"
+              "type": "",
+              "maximum": "",
+              "minimum": "",
+              "format": ""
             }
           ],
           "responses": {
@@ -59,12 +59,6 @@
                 "type": "object",
                 "$ref": "#/definitions/HealthGet"
               }
-            },
-            "400": {
-              "description": "HealthId required"
-            },
-            "404": {
-              "description": "Health service not found"
             },
             "500": {
               "description": "Server Error"
@@ -78,11 +72,7 @@
         "type": "object",
         "properties": {
 
-          "appName": {
-            "type": "string",
-            "example": "project-heroku"
-          },
-
+        
           "available": {
             "type": "boolean",
             "example": "true"
@@ -104,11 +94,6 @@
           "startTime": {
             "type": "string",
             "example": "2021-08-12T17:34:17.713Z"
-            
-          },
-          "version": {
-            "type": "string",
-            "example": "0.0.1"
             
           }
         }
