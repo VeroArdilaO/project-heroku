@@ -16,7 +16,7 @@
     },
     "tags": [
       {
-        "name": "Health",
+        "name": "Health Endpoint",
         "description": "This is an example about how to use Docs Open Api proving a Health check service "
       }
     ],
