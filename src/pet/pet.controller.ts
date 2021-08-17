@@ -5,20 +5,23 @@ import axios from 'axios';
 @Controller('pet')
 export class PetController {
   @Get('axios')
-  public async get(@Res() response: Response) {
+  public async getTask(@Res() response: Response) {
+    //const data = await this.knex('test').select('*');
     const requestPets = await axios.get('https://bsl1.herokuapp.com/pet');
-    const pets = requestPets.data.pets;
+    const pets = requestPets.data;
+    console.log(requestPets);
     const requestCategories = await axios.get(
       'https://bsl1.herokuapp.com/pet/categories',
     );
-    const categories = requestCategories.data.categories;
-    const mixPets = pets.map((pet) => {
-      delete pets.id;
-      pet.category = categories.find(
+    const categorias = requestCategories.data.categories;
+    const petsWithCatName = pets.map((pet) => {
+      delete pet.id;
+      pet.category = categorias.find(
         (category) => category.id === pet.category,
       ).name;
       return pet;
     });
-    return response.status(HttpStatus.OK).send({ mixPets });
+    //Logger.log({ data });
+    return response.status(HttpStatus.OK).send({ petsWithCatName });
   }
 }
