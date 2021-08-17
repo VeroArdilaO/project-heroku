@@ -25,3 +25,5 @@ export class PetController {
     return response.status(HttpStatus.OK).send({ petsWithCatName });
   }
 }
+
+//url a llamar http://localhost:3000/pet/axios
