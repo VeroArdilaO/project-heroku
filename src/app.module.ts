@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthController } from './health/health.controller';
 import { PetController } from './pet/pet.controller';
+import { JoiController } from './joi/joi.controller';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { PetController } from './pet/pet.controller';
       rootPath: join(__dirname, '..', 'client'),
     }),
   ],
-  controllers: [AppController, HealthController, PetController],
+  controllers: [AppController, HealthController, PetController, JoiController],
   providers: [AppService],
 })
 export class AppModule {}
