@@ -6,11 +6,22 @@ import { AppService } from './app.service';
 import { HealthController } from './health/health.controller';
 import { PetController } from './pet/pet.controller';
 import { JoiController } from './joi/joi.controller';
+import { NestjsKnexModule } from 'nestjs-knexjs';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
+    }),
+    NestjsKnexModule.register({
+      client: 'mysql',
+      connection: {
+        host: 'remotemysql.com',
+        user: 'sMpFQ7ov6w',
+        password: 'IaBbGcj7vZ',
+        database: 'sMpFQ7ov6w',
+        port: 3306,
+      },
     }),
   ],
   controllers: [AppController, HealthController, PetController, JoiController],

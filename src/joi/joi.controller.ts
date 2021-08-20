@@ -10,6 +10,9 @@ import {
 import * as Joi from 'joi';
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import Knex from 'knex';
+import { NestjsKnexService } from 'nestjs-knexjs';
+
 /* enum gender {
   male = 'male',
   female = 'female',
@@ -40,16 +43,57 @@ const schema = Joi.object({
 
 @Controller('joi')
 export class JoiController {
-  @Get()
-  public get(@Res() response: Response) {
-    return response.status(HttpStatus.OK).send({});
+  private readonly knex: Knex = null;
+
+  constructor(private nestjsKnexService: NestjsKnexService) {
+    this.knex = this.nestjsKnexService.getKnexConnection();
   }
-  @Post()
+  @Get()
+  public async get(@Res() response: Response) {
+    let data;
+
+    try {
+      data = await this.knex('newData').select('*');
+    } catch (ex) {
+      Logger.error(ex.message);
+    }
+    /* Logger.log({ data }); */
+    return response.status(HttpStatus.OK).send({ data });
+  }
+
+  @Post('axios')
+  public async postAxios(@Res() response: Response, @Body() body: any) {
+    try {
+      const result = schema.validate(body);
+      if (result.error) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: result.error,
+        });
+      } /* 
+      const id = uuidv4(); */
+      const data = await this.knex('newData').insert({
+        name: body.name,
+        lastName: body.lastName,
+        email: body.email,
+        password: body.password,
+        gender: body.gender,
+        birthDate: body.birthDate,
+      });
+      Logger.log(data);
+      return response.status(HttpStatus.CREATED).send({ data });
+    } catch (ex) {
+      Logger.error(ex.message);
+      return response
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({ error: 'Server error' });
+    }
+  }
+  @Post('schema')
   public post(@Body() body: any, @Res() response: Response) {
     try {
       const result = schema.validate(body);
       console.log(body);
-      Logger.log({ result });
+      /*   Logger.log({ result }); */
       if (result.error) {
         return response.status(HttpStatus.BAD_REQUEST).send({
           error: 'Invalid request body',
