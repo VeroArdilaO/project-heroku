@@ -50,28 +50,29 @@ export class JoiController {
   }
   @Get()
   public async get(@Res() response: Response) {
-    let data;
+    let newData;
 
     try {
-      data = await this.knex('newData').select('*');
+      newData = await this.knex('data').select('*');
     } catch (ex) {
       Logger.error(ex.message);
     }
     /* Logger.log({ data }); */
-    return response.status(HttpStatus.OK).send({ data });
+    return response.status(HttpStatus.OK).send({ newData });
   }
 
   @Post('axios')
-  public async postAxios(@Res() response: Response, @Body() body: any) {
+  public async Post(@Res() response: Response, @Body() body: any) {
     try {
       const result = schema.validate(body);
       if (result.error) {
         return response.status(HttpStatus.BAD_REQUEST).send({
           error: result.error,
         });
-      } /* 
-      const id = uuidv4(); */
-      const data = await this.knex('newData').insert({
+      }
+      const id = uuidv4();
+      const table = await this.knex(' data ').insert({
+        id,
         name: body.name,
         lastName: body.lastName,
         email: body.email,
@@ -79,8 +80,8 @@ export class JoiController {
         gender: body.gender,
         birthDate: body.birthDate,
       });
-      Logger.log(data);
-      return response.status(HttpStatus.CREATED).send({ data });
+      Logger.log(table);
+      return response.status(HttpStatus.CREATED).send({ table });
     } catch (ex) {
       Logger.error(ex.message);
       return response
