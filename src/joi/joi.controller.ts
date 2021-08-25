@@ -12,11 +12,7 @@ import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import Knex from 'knex';
 import { NestjsKnexService } from 'nestjs-knexjs';
-
-/* enum gender {
-  male = 'male',
-  female = 'female',
-} */
+import * as bcrypt from 'bcrypt';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -41,6 +37,15 @@ const schema = Joi.object({
   birthDate: Joi.string(),
 });
 
+const schemaLogin = Joi.object({
+  password: Joi.string()
+    .pattern(
+      new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'),
+    )
+    .required(),
+  email: Joi.string().required(),
+});
+
 @Controller('joi')
 export class JoiController {
   private readonly knex: Knex = null;
@@ -61,6 +66,39 @@ export class JoiController {
     return response.status(HttpStatus.OK).send({ newData });
   }
 
+  @Post('login')
+  public async login(@Res() response: Response, @Body() body: any) {
+    try {
+      console.log(body);
+      const result = schemaLogin.validate(body);
+      if (result.error) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: result.error,
+        });
+      }
+      const queryResult = await this.knex('data').where({ email: body.email });
+      console.log(queryResult);
+      if (!queryResult.length) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: 'user or password invalid',
+        });
+      }
+      const user = queryResult[0];
+      const isValidPassword = bcrypt.compareSync(body.password, user.password);
+      if (!isValidPassword) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: 'email or password invalid',
+        });
+      }
+      delete user.password;
+
+      return response.status(HttpStatus.OK).send({
+        user,
+      });
+    } finally {
+    }
+  }
+
   @Post('axios')
   public async Post(@Res() response: Response, @Body() body: any) {
     try {
@@ -70,23 +108,30 @@ export class JoiController {
           error: result.error,
         });
       }
+      const password = body.password;
+      const saltRounds = 2;
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const hashedPassword = bcrypt.hashSync(password, salt);
       const id = uuidv4();
-      const table = await this.knex(' data ').insert({
+      const table = {
         id,
         name: body.name,
         lastName: body.lastName,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         gender: body.gender,
         birthDate: body.birthDate,
-      });
+      };
+      console.log(table);
+      await this.knex(' data ').insert(table);
       Logger.log(table);
       return response.status(HttpStatus.CREATED).send({ table });
     } catch (ex) {
       Logger.error(ex.message);
       return response
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .send({ error: 'Server error' });
+        .send({ error: 'ex.message' });
+    } finally {
     }
   }
   @Post('schema')
@@ -111,3 +156,13 @@ export class JoiController {
     }
   }
 }
+
+/* {
+  "email": "Leito@gmail.com",
+   "password": "Dbc1234&yuy"
+
+  {
+  "email": "Pepe@gmail.com",
+  "password": "Cbc1234&yuy"
+  }
+} */
