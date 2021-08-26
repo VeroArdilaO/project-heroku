@@ -160,7 +160,7 @@ export class JoiController {
 /* {
   "email": "Leito@gmail.com",
    "password": "Dbc1234&yuy"
-
+  }
   {
   "email": "Pepe@gmail.com",
   "password": "Cbc1234&yuy"

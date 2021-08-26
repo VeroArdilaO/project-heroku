@@ -1,0 +1,173 @@
+
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.5",
+    "title": "Swagger User Login",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+   
+    {
+      "name": "User Login",
+      "description": "Documentation about User Login"
+    }
+  ],
+  "basePath": "/",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/joi/login": {
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "summary": "login",
+        "description": "",
+        "operationId": "login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "data to login",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserDto"
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearer": {
+    "type": "bearer",
+    "name": "bearer",
+    "in": "header"
+    }
+  },
+  "definitions": {
+    "UserLogin": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "vero@email.com",
+          "description": "should be a valid email"
+        },
+        "password": {
+          "type": "string",
+          "example": "Abc1234&yuy",
+          "description": "should have an uppercase, lowercase, number, special charecter and min 8 lenght"
+        }
+      }
+    },
+    "UserDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "example": "Vero"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Ardila"
+        },
+        "email": {
+          "type": "string",
+          "example": "vero@email.com"
+        },
+        "lastConnection": {
+          "type": "string",
+          "example": "25 de Agosto de 2021"
+        },
+        "token": {
+          "type": "string",
+          "example": "logged token"
+        }
+      }
+    },
+    "UserPost": {
+      "type": "object",
+      "required": [
+        "name",
+        "lastName",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jhon"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "email": {
+          "type": "string",
+          "example": "jhondoe@email.com",
+          "description": "should be a valid email"
+        },
+        "password": {
+          "type": "string",
+          "example": "Abc1234&yuy",
+          "description": "should have an uppercase, lowercase, number, special charecter and min 8 lenght"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "male",
+            "female"
+          ]
+        },
+        "birthDate": {
+          "type": "string",
+          "example": "2019-08-24T14:15:22Z",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
+
+
+
+
+  

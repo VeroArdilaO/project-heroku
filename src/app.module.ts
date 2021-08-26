@@ -11,7 +11,8 @@ import { NestjsKnexModule } from 'nestjs-knexjs';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
+      /*  rootPath: join(__dirname, '..', 'client'), */
+      rootPath: join(__dirname, '..', 'docLogin'),
     }),
     NestjsKnexModule.register({
       client: 'mysql',
