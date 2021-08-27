@@ -6,6 +6,7 @@ import {
   Logger,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import { Response } from 'express';
@@ -13,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Knex from 'knex';
 import { NestjsKnexService } from 'nestjs-knexjs';
 import * as bcrypt from 'bcrypt';
+import { AuthGuard } from 'src/auth.guard';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -53,6 +55,48 @@ export class JoiController {
   constructor(private nestjsKnexService: NestjsKnexService) {
     this.knex = this.nestjsKnexService.getKnexConnection();
   }
+  pets: any = [
+    {
+      id: 1,
+      name: 'Kira',
+      /* en este caso category es una clave foránea a la entidad categoria */
+      category: 1,
+    },
+    {
+      id: 2,
+      name: 'Maison Mount',
+      category: 2,
+    },
+    {
+      id: 3,
+      name: 'Rex',
+      category: 1,
+    },
+    {
+      id: 4,
+      name: 'Machi',
+      category: 2,
+    },
+    {
+      id: 5,
+      name: 'Rin tin tin',
+      category: 1,
+    },
+    {
+      id: 6,
+      name: 'Toby',
+      category: 1,
+    },
+  ];
+
+  @Get()
+  @UseGuards(new AuthGuard())
+  public async getGuard(@Res() response: Response) {
+    const data = this.pets;
+    //Logger.log({ data, pets });
+    return response.status(HttpStatus.OK).send(data);
+  }
+
   @Get()
   public async get(@Res() response: Response) {
     let newData;

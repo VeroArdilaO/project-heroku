@@ -18,6 +18,10 @@
     {
       "name": "User Login",
       "description": "Documentation about User Login"
+    },
+    {
+      "name": "Pet Auth",
+      "description": "Pet header authentication"
     }
   ],
   "basePath": "/",
@@ -26,6 +30,42 @@
     "http"
   ],
   "paths": {
+    "/joi": {
+      "get": {
+        "tags": [
+          ""
+        ],
+        "summary": "get pets",
+        "description": "",
+        "operationId": "getPets",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "get all pets objects",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PetGet"
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden resource"
+          }
+        }
+      }
+    },
     "/joi/login": {
       "post": {
         "tags": [
@@ -44,7 +84,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "data to login",
+            "description": "pets  ",
             "required": true,
             "schema": {
               "$ref": "#/definitions/UserLogin"
@@ -162,6 +202,26 @@
           "example": "2019-08-24T14:15:22Z",
           "format": "date-time"
         }
+      }
+    }
+    ,
+  "PetGet": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer",
+        "format": "int32",
+        "example": "1"
+      },
+      "name": {
+        "type": "string",
+        "example": "kira"
+      },
+      "category": {
+        "type": "integer",
+        "format": "int32",
+        "example": "1"
+       }
       }
     }
   }

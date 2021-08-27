@@ -7,6 +7,7 @@ import { HealthController } from './health/health.controller';
 import { PetController } from './pet/pet.controller';
 import { JoiController } from './joi/joi.controller';
 import { NestjsKnexModule } from 'nestjs-knexjs';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { NestjsKnexModule } from 'nestjs-knexjs';
     }),
   ],
   controllers: [AppController, HealthController, PetController, JoiController],
-  providers: [AppService],
+  providers: [AppService, AuthGuard],
 })
 export class AppModule {}
