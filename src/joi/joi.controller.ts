@@ -15,6 +15,10 @@ import Knex from 'knex';
 import { NestjsKnexService } from 'nestjs-knexjs';
 import * as bcrypt from 'bcrypt';
 import { AuthGuard } from 'src/auth.guard';
+import * as moment from 'moment';
+import * as jwt from 'jwt-simple';
+
+const SEPER_SECRE_KEY = 'clave super secreta';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -89,7 +93,7 @@ export class JoiController {
     },
   ];
 
-  @Get()
+  @Get('pets')
   @UseGuards(new AuthGuard())
   public async getGuard(@Res() response: Response) {
     const data = this.pets;
@@ -134,6 +138,27 @@ export class JoiController {
           error: 'email or password invalid',
         });
       }
+      const token = this.createToken(user);
+      user.token = token;
+      const queryLastConnection = await this.knex('connection').where({
+        user_id: user.id,
+      });
+      console.log({ queryLastConnection });
+      user.lastConnection = !queryLastConnection.length
+        ? 'Hola por primera vez'
+        : queryLastConnection[0].last_connection;
+
+      const newConnection = {
+        user_id: user.id,
+        last_connection: 'hoy',
+      };
+      const updateResult = await this.knex('connection')
+        .update(newConnection)
+        .where({
+          user_id: user.id,
+        });
+      console.log({ updateResult });
+
       delete user.password;
 
       return response.status(HttpStatus.OK).send({
@@ -141,6 +166,16 @@ export class JoiController {
       });
     } finally {
     }
+  }
+  private createToken(user) {
+    const payload = {
+      email: user.email,
+      mensajePlay: 'holi',
+      sub: user.id,
+      iat: moment().unix(),
+      exp: moment().add(30, 'second').unix(),
+    };
+    return jwt.encode(payload, SEPER_SECRE_KEY);
   }
 
   @Post('axios')
@@ -205,8 +240,14 @@ export class JoiController {
   "email": "Leito@gmail.com",
    "password": "Dbc1234&yuy"
   }
-  {
-  "email": "Pepe@gmail.com",
-  "password": "Cbc1234&yuy"
-  }
+   
+} */
+
+/* {
+  "name": "Camila",
+  "lastName": "Perez",
+  "email": "camili@gmail.com",
+  "password": "Daa1234&yuy",
+  "gender": "female",
+  "birthDate": "1995-08-24T14:15:22Z"
 } */

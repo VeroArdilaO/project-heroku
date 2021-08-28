@@ -30,7 +30,7 @@
     "http"
   ],
   "paths": {
-    "/joi": {
+    "/joi/pets": {
       "get": {
         "tags": [
           ""
