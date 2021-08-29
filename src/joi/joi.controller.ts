@@ -173,7 +173,7 @@ export class JoiController {
       mensajePlay: 'holi',
       sub: user.id,
       iat: moment().unix(),
-      exp: moment().add(30, 'second').unix(),
+      exp: moment().add(60, 'second').unix(),
     };
     return jwt.encode(payload, SEPER_SECRE_KEY);
   }
@@ -242,12 +242,25 @@ export class JoiController {
   }
    
 } */
+/* {
+  "email": "Pepe@gmail.com",
+  "password": "Cbc1234&yuy"
+  } */
 
 /* {
   "name": "Camila",
   "lastName": "Perez",
   "email": "camili@gmail.com",
   "password": "Daa1234&yuy",
+  "gender": "female",
+  "birthDate": "1995-08-24T14:15:22Z"
+} */
+/* 
+{
+  "name": "Daniela",
+  "lastName": "Gomez",
+  "email": "Dani@gmail.com",
+  "password": "Dcc1234&yuy",
   "gender": "female",
   "birthDate": "1995-08-24T14:15:22Z"
 } */

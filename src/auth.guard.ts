@@ -10,10 +10,10 @@ export class AuthGuard implements CanActivate {
     const response = context.switchToHttp().getResponse();
 
     if (!request.headers.bearer) {
-      return true;
+      return false;
     }
 
-    /*    const token = request.headers.bearer.split(' ')[1];
+    /* const token = request.headers.bearer.split(' ')[1];
 
     try {
       const payload = jwt.decode(token, SEPER_SECRE_KEY);
@@ -27,6 +27,6 @@ export class AuthGuard implements CanActivate {
       request,
       response,
     });
-    return true;
+    return false;
   }
 }
