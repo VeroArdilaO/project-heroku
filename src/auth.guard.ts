@@ -1,5 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
+/* import * as moment from 'moment'; */
+import * as jwt from 'jwt-simple';
+
+const SUPER_SECRET_KEY = 'clave super secreta';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -13,20 +22,20 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    /* const token = request.headers.bearer.split(' ')[1];
+    const token = request.headers.bearer.split(' ')[1];
 
     try {
-      const payload = jwt.decode(token, SEPER_SECRE_KEY);
-      console.log(payload);
+      token;
+      /*       const payload = jwt.decode(token, SUPER_SECRET_KEY);
+      console.log(payload); */
     } catch (ex) {
       Logger.error(ex.message);
       return false;
-    } */
-
-    console.log({
+    }
+    /*    console.log({
       request,
       response,
-    });
-    return false;
+    }); */
+    return true;
   }
 }

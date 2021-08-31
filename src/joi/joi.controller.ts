@@ -18,7 +18,7 @@ import { AuthGuard } from 'src/auth.guard';
 import * as moment from 'moment';
 import * as jwt from 'jwt-simple';
 
-const SEPER_SECRE_KEY = 'clave super secreta';
+const SUPER_SECRET_KEY = 'clave super secreta';
 
 const schema = Joi.object({
   name: Joi.string().required(),
@@ -138,7 +138,8 @@ export class JoiController {
           error: 'email or password invalid',
         });
       }
-      const token = this.createToken(user);
+      /* const token = this.createToken(user); */
+      const token = 'NestJS';
       user.token = token;
       const queryLastConnection = await this.knex('connection').where({
         user_id: user.id,
@@ -173,9 +174,9 @@ export class JoiController {
       mensajePlay: 'holi',
       sub: user.id,
       iat: moment().unix(),
-      exp: moment().add(60, 'second').unix(),
+      exp: moment().add(1, 'minute').unix(),
     };
-    return jwt.encode(payload, SEPER_SECRE_KEY);
+    return jwt.encode(payload, SUPER_SECRET_KEY);
   }
 
   @Post('axios')
