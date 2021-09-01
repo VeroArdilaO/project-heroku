@@ -23,19 +23,20 @@ export class AuthGuard implements CanActivate {
     }
 
     const token = request.headers.bearer.split(' ')[1];
+    const test = request.headers.bearer;
 
     try {
-      token;
-      /*       const payload = jwt.decode(token, SUPER_SECRET_KEY);
-      console.log(payload); */
+      if (token !== 'NestJS') {
+        return false;
+      }
     } catch (ex) {
       Logger.error(ex.message);
       return false;
     }
-    /*    console.log({
-      request,
-      response,
-    }); */
+    console.log({
+      token,
+      test,
+    });
     return true;
   }
 }
