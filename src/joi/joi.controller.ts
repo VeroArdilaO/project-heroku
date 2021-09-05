@@ -17,6 +17,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthGuard } from 'src/auth.guard';
 import * as moment from 'moment';
 import * as jwt from 'jwt-simple';
+import { AuthGuardToken } from 'src/authtoken.guard';
 
 const SUPER_SECRET_KEY = 'clave super secreta';
 
@@ -101,6 +102,14 @@ export class JoiController {
     return response.status(HttpStatus.OK).send(data);
   }
 
+  @Get('tokenGuard')
+  @UseGuards(new AuthGuardToken())
+  public async tokenGuard(@Res() response: Response) {
+    const data = this.pets;
+    //Logger.log({ data, pets });
+    return response.status(HttpStatus.OK).send(data);
+  }
+
   @Get()
   public async get(@Res() response: Response) {
     let newData;
@@ -113,9 +122,8 @@ export class JoiController {
     /* Logger.log({ data }); */
     return response.status(HttpStatus.OK).send({ newData });
   }
-
-  @Post('login')
-  public async login(@Res() response: Response, @Body() body: any) {
+  @Post('tokenLogin')
+  public async tokenLogin(@Res() response: Response, @Body() body: any) {
     try {
       console.log(body);
       const result = schemaLogin.validate(body);
@@ -138,8 +146,7 @@ export class JoiController {
           error: 'email or password invalid',
         });
       }
-      /* const token = this.createToken(user); */
-      const token = 'NestJS';
+      const token = this.createToken(user);
       user.token = token;
       const queryLastConnection = await this.knex('connection').where({
         user_id: user.id,
@@ -179,6 +186,71 @@ export class JoiController {
     return jwt.encode(payload, SUPER_SECRET_KEY);
   }
 
+  @Post('login')
+  public async login(@Res() response: Response, @Body() body: any) {
+    try {
+      console.log(body);
+      const result = schemaLogin.validate(body);
+      if (result.error) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: result.error,
+        });
+      }
+      const queryResult = await this.knex('data').where({ email: body.email });
+      console.log(queryResult);
+      if (!queryResult.length) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: 'user or password invalid',
+        });
+      }
+      const user = queryResult[0];
+      const isValidPassword = bcrypt.compareSync(body.password, user.password);
+      if (!isValidPassword) {
+        return response.status(HttpStatus.BAD_REQUEST).send({
+          error: 'email or password invalid',
+        });
+      }
+      /*const token = this.createToken(user); */
+      const token = 'NestJS';
+      user.token = token;
+      const queryLastConnection = await this.knex('connection').where({
+        user_id: user.id,
+      });
+      console.log({ queryLastConnection });
+      user.lastConnection = !queryLastConnection.length
+        ? 'Hola por primera vez'
+        : queryLastConnection[0].last_connection;
+
+      const newConnection = {
+        user_id: user.id,
+        last_connection: 'hoy',
+      };
+      const updateResult = await this.knex('connection')
+        .update(newConnection)
+        .where({
+          user_id: user.id,
+        });
+      console.log({ updateResult });
+
+      delete user.password;
+
+      return response.status(HttpStatus.OK).send({
+        user,
+      });
+    } finally {
+    }
+  }
+  /*   private createToken(user) {
+    const payload = {
+      email: user.email,
+      mensajePlay: 'holi',
+      sub: user.id,
+      iat: moment().unix(),
+      exp: moment().add(20, 'second').unix(),
+    };
+    return jwt.encode(payload, SUPER_SECRET_KEY);
+  }
+ */
   @Post('axios')
   public async Post(@Res() response: Response, @Body() body: any) {
     try {
